@@ -1,0 +1,23 @@
+{
+  "name": "sole-backend",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start":    "node server.js",
+    "dev":      "nodemon server.js",
+    "db:init":  "node scripts/initDB.js",
+    "db:seed":  "node scripts/seedDB.js",
+    "db:reset": "node scripts/initDB.js && node scripts/seedDB.js"
+  },
+  "dependencies": {
+    "bcryptjs":          "^2.4.3",
+    "cors":              "^2.8.5",
+    "dotenv":            "^16.4.5",
+    "express":           "^4.19.2",
+    "express-validator": "^7.1.0",
+    "jsonwebtoken":      "^9.0.2",
+    "pg":                "^8.11.5",
+    "uuid":              "^9.0.1"
+  },
+  "devDependencies": { "nodemon": "^3.1.0" }
+}

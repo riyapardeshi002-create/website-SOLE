@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SOLE — Premium Footwear</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --acid:#C8FF00;--pink:#FF2D78;--violet:#7B2FFF;--cyan:#00F5FF;
+  --dark:#080810;--dark2:#0F0F1A;--dark3:#16162A;
+  --glass:rgba(255,255,255,0.04);--glass2:rgba(255,255,255,0.08);
+  --border:rgba(255,255,255,0.08);--text:#F0F0FF;--muted:rgba(240,240,255,0.45);
+}
+html{scroll-behavior:smooth}
+body{background:var(--dark);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;min-height:100vh}
+#root{min-height:100vh}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--dark)}
+::-webkit-scrollbar-thumb{background:var(--violet);border-radius:2px}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes glow{0%,100%{box-shadow:0 0 20px rgba(123,47,255,0.4)}50%{box-shadow:0 0 40px rgba(123,47,255,0.8),0 0 80px rgba(200,255,0,0.2)}}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes scaleIn{from{opacity:0;transform:scale(0.92)}to{opacity:1;transform:scale(1)}}
+@keyframes toastIn{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:translateX(0)}}
+
+.animate-in{animation:fadeIn 0.5s ease forwards}
+.animate-slide{animation:slideIn 0.5s ease forwards}
+.animate-scale{animation:scaleIn 0.4s ease forwards}
+.float{animation:float 4s ease-in-out infinite}
+
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9999;opacity:0.4;
+}
+
+.navbar{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 2rem;height:70px;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,16,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:2rem;background:linear-gradient(135deg,var(--acid),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;cursor:pointer;letter-spacing:2px;}
+.nav-links{display:flex;gap:2rem;align-items:center}
+.nav-link{color:var(--muted);font-size:0.85rem;font-weight:500;cursor:pointer;transition:color 0.2s;letter-spacing:0.5px;text-transform:uppercase;position:relative;}
+.nav-link:hover,.nav-link.active{color:var(--text)}
+.nav-link.active::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--violet),var(--cyan));border-radius:1px;}
+.nav-actions{display:flex;gap:1rem;align-items:center}
+.nav-btn{background:none;border:1px solid var(--border);color:var(--text);padding:0.5rem 1.2rem;border-radius:100px;font-size:0.8rem;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;font-weight:500;}
+.nav-btn:hover{border-color:var(--violet);color:var(--acid);background:rgba(123,47,255,0.1)}
+.cart-btn{position:relative;background:linear-gradient(135deg,var(--violet),var(--pink));border:none;color:#fff;padding:0.5rem 1.2rem;border-radius:100px;font-size:0.8rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;transition:all 0.2s;}
+.cart-btn:hover{transform:scale(1.05);box-shadow:0 0 20px rgba(123,47,255,0.5)}
+.cart-count{position:absolute;top:-6px;right:-6px;background:var(--acid);color:var(--dark);width:18px;height:18px;border-radius:50%;font-size:0.65rem;font-weight:800;display:flex;align-items:center;justify-content:center;}
+.mobile-nav-btn{display:none;background:none;border:none;color:var(--text);font-size:1.5rem;cursor:pointer}
+.mobile-menu{position:fixed;inset:0;z-index:99;background:var(--dark2);padding:2rem;padding-top:90px;display:flex;flex-direction:column;gap:1.5rem;animation:fadeIn 0.3s ease;}
+.mobile-menu .nav-link{font-size:1.5rem}
+
+.page{padding-top:70px;min-height:100vh;animation:fadeIn 0.4s ease}
+
+.btn-primary{background:linear-gradient(135deg,var(--violet),var(--pink));border:none;color:#fff;padding:0.85rem 2rem;border-radius:100px;font-size:0.9rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.25s;display:inline-flex;align-items:center;gap:0.5rem;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(123,47,255,0.5)}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.btn-outline{background:none;border:1px solid var(--border);color:var(--text);padding:0.85rem 2rem;border-radius:100px;font-size:0.9rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.25s;display:inline-flex;align-items:center;gap:0.5rem;}
+.btn-outline:hover{border-color:var(--cyan);color:var(--cyan);background:rgba(0,245,255,0.05)}
+.btn-acid{background:var(--acid);border:none;color:var(--dark);padding:0.85rem 2rem;border-radius:100px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.25s;display:inline-flex;align-items:center;gap:0.5rem;}
+.btn-acid:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(200,255,0,0.4)}
+
+.card{background:var(--glass);border:1px solid var(--border);border-radius:20px;overflow:hidden;transition:all 0.3s;position:relative;}
+.card:hover{transform:translateY(-6px);border-color:rgba(123,47,255,0.4);box-shadow:0 20px 60px rgba(0,0,0,0.4),0 0 30px rgba(123,47,255,0.15);}
+.product-card .img-wrap{position:relative;overflow:hidden;height:220px;background:linear-gradient(135deg,var(--dark2),var(--dark3));}
+.product-card .img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s;}
+.product-card:hover .img-wrap img{transform:scale(1.08)}
+.product-card .card-body{padding:1.2rem}
+.product-card .brand{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.product-card .name{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin:0.3rem 0}
+.product-card .price{color:var(--acid);font-weight:700;font-size:1.1rem}
+.product-card .og-price{color:var(--muted);text-decoration:line-through;font-size:0.85rem;margin-left:0.5rem}
+.quick-actions{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(8,8,16,0.95),transparent);padding:1.5rem 1rem 1rem;display:flex;gap:0.5rem;transform:translateY(100%);transition:transform 0.3s;}
+.product-card:hover .quick-actions{transform:translateY(0)}
+.quick-btn{flex:1;border:none;border-radius:100px;padding:0.6rem;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+.quick-btn.add{background:var(--violet);color:#fff}
+.quick-btn.add:hover{background:var(--pink)}
+.quick-btn.buy{background:var(--acid);color:var(--dark)}
+.quick-btn.buy:hover{transform:scale(1.03)}
+.badge{display:inline-block;padding:0.25rem 0.7rem;border-radius:100px;font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;}
+.badge-sale{background:rgba(255,45,120,0.2);color:var(--pink);border:1px solid rgba(255,45,120,0.3)}
+.badge-new{background:rgba(200,255,0,0.15);color:var(--acid);border:1px solid rgba(200,255,0,0.3)}
+.badge-hot{background:rgba(123,47,255,0.2);color:#a78bfa;border:1px solid rgba(123,47,255,0.3)}
+.input-field{width:100%;background:var(--glass2);border:1px solid var(--border);color:var(--text);padding:0.85rem 1.2rem;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;transition:all 0.2s;}
+.input-field:focus{border-color:var(--violet);background:rgba(123,47,255,0.08);box-shadow:0 0 0 3px rgba(123,47,255,0.15)}
+.input-field::placeholder{color:var(--muted)}
+.input-label{display:block;font-size:0.8rem;color:var(--muted);margin-bottom:0.5rem;font-weight:500}
+.filter-chip{background:var(--glass);border:1px solid var(--border);color:var(--muted);padding:0.5rem 1rem;border-radius:100px;font-size:0.8rem;cursor:pointer;transition:all 0.2s;white-space:nowrap;font-weight:500;}
+.filter-chip:hover,.filter-chip.active{background:rgba(123,47,255,0.15);border-color:var(--violet);color:var(--acid);}
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.5rem;}
+.hero{min-height:calc(100vh - 70px);display:flex;align-items:center;position:relative;overflow:hidden;background:radial-gradient(ellipse 80% 60% at 60% 40%,rgba(123,47,255,0.25) 0%,transparent 70%),radial-gradient(ellipse 50% 50% at 20% 80%,rgba(255,45,120,0.15) 0%,transparent 60%),var(--dark);}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black,transparent);}
+.hero-content{position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:4rem 2rem;width:100%}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(200,255,0,0.1);border:1px solid rgba(200,255,0,0.2);padding:0.4rem 1rem;border-radius:100px;margin-bottom:1.5rem;}
+.hero-eyebrow span{font-size:0.75rem;color:var(--acid);font-weight:600;letter-spacing:1px;text-transform:uppercase}
+.hero-eyebrow::before{content:'';width:6px;height:6px;background:var(--acid);border-radius:50%;animation:pulse 2s infinite}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,10vw,9rem);line-height:0.95;letter-spacing:2px;margin-bottom:1.5rem;}
+.hero-title .line1{display:block;color:var(--text)}
+.hero-title .line2{display:block;background:linear-gradient(135deg,var(--violet),var(--pink),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-sub{max-width:480px;color:var(--muted);line-height:1.7;margin-bottom:2.5rem;font-size:1.05rem}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap}
+.hero-stats{display:flex;gap:3rem;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border);}
+.stat .num{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--acid)}
+.stat .label{font-size:0.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.hero-image{position:absolute;right:0;top:50%;transform:translateY(-50%);width:55%;max-width:700px;pointer-events:none;}
+.hero-image img{width:100%;animation:float 5s ease-in-out infinite}
+.marquee-wrap{overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:1rem 0;background:rgba(123,47,255,0.05);}
+.marquee-inner{display:flex;width:max-content;animation:marquee 20s linear infinite}
+.marquee-item{padding:0 2rem;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--muted);letter-spacing:2px;white-space:nowrap;}
+.marquee-item.accent{color:var(--acid)}
+.section{padding:5rem 2rem;max-width:1200px;margin:0 auto}
+.section-header{margin-bottom:3rem}
+.section-eyebrow{font-size:0.75rem;color:var(--violet);font-weight:600;text-transform:uppercase;letter-spacing:2px;margin-bottom:0.75rem;}
+.section-title{font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3rem);font-weight:800;line-height:1.1;}
+.section-title span{background:linear-gradient(135deg,var(--cyan),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.footer{border-top:1px solid var(--border);background:var(--dark2);padding:3rem 2rem 2rem;margin-top:4rem;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;max-width:1200px;margin:0 auto}
+.footer-brand .logo{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;background:linear-gradient(135deg,var(--acid),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.footer-brand p{color:var(--muted);font-size:0.85rem;line-height:1.7;margin-top:0.75rem;max-width:260px}
+.footer-col h4{font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700;margin-bottom:1rem;text-transform:uppercase;letter-spacing:1px}
+.footer-col a{display:block;color:var(--muted);font-size:0.85rem;margin-bottom:0.5rem;cursor:pointer;transition:color 0.2s}
+.footer-col a:hover{color:var(--acid)}
+.footer-bottom{max-width:1200px;margin:2rem auto 0;border-top:1px solid var(--border);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;}
+.footer-bottom p{color:var(--muted);font-size:0.8rem}
+.cart-page{max-width:900px;margin:0 auto;padding:2rem}
+.cart-item{display:flex;gap:1.5rem;align-items:center;background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:1.2rem;margin-bottom:1rem;animation:fadeIn 0.3s ease;}
+.cart-item img{width:90px;height:90px;object-fit:cover;border-radius:12px}
+.cart-item-info{flex:1}
+.cart-item-name{font-family:'Syne',sans-serif;font-weight:700;font-size:0.95rem}
+.cart-item-meta{color:var(--muted);font-size:0.8rem;margin-top:0.25rem}
+.qty-control{display:flex;align-items:center;gap:0.75rem;background:var(--dark2);border-radius:100px;padding:0.3rem;}
+.qty-btn{width:30px;height:30px;border-radius:50%;border:none;background:var(--glass2);color:var(--text);cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.qty-btn:hover{background:var(--violet);color:#fff}
+.qty-num{font-weight:700;font-size:0.9rem;min-width:20px;text-align:center}
+.cart-total{background:var(--glass);border:1px solid var(--border);border-radius:20px;padding:1.5rem;}
+.cart-total-row{display:flex;justify-content:space-between;margin-bottom:0.75rem;font-size:0.9rem}
+.cart-total-row.final{font-size:1.2rem;font-weight:700;padding-top:0.75rem;border-top:1px solid var(--border);margin-top:0.75rem;color:var(--acid);}
+.remove-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.2rem;transition:color 0.2s;padding:0.25rem;}
+.remove-btn:hover{color:var(--pink)}
+.checkout-grid{display:grid;grid-template-columns:1fr 380px;gap:2rem;max-width:1100px;margin:0 auto;padding:2rem}
+.form-section{background:var(--glass);border:1px solid var(--border);border-radius:20px;padding:2rem}
+.form-section h3{font-family:'Syne',sans-serif;font-weight:700;margin-bottom:1.5rem;font-size:1.1rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+.form-group{margin-bottom:1rem}
+.payment-card{background:linear-gradient(135deg,var(--violet),#2d1b69,var(--pink));border-radius:16px;padding:1.5rem;margin-bottom:1rem;position:relative;overflow:hidden;}
+.payment-card::after{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.1);}
+.payment-card .card-num{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:3px;margin:1rem 0 0.5rem;color:#fff;}
+.success-screen{text-align:center;padding:4rem 2rem;}
+.success-icon{width:80px;height:80px;background:linear-gradient(135deg,var(--acid),var(--cyan));border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:2rem;animation:glow 2s infinite;}
+.auth-page{min-height:calc(100vh - 70px);display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse 60% 60% at 50% 50%,rgba(123,47,255,0.15) 0%,transparent 70%),var(--dark);padding:2rem;}
+.auth-card{width:100%;max-width:440px;background:var(--glass);border:1px solid var(--border);border-radius:24px;padding:2.5rem;animation:scaleIn 0.4s ease;}
+.auth-card h2{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;margin-bottom:0.5rem}
+.auth-card .subtitle{color:var(--muted);font-size:0.9rem;margin-bottom:2rem}
+.divider{display:flex;align-items:center;gap:1rem;margin:1.5rem 0;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.divider span{color:var(--muted);font-size:0.8rem}
+.social-btn{width:100%;background:var(--glass2);border:1px solid var(--border);color:var(--text);padding:0.85rem;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:0.9rem;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:0.75rem;}
+.social-btn:hover{border-color:var(--violet);background:rgba(123,47,255,0.1)}
+.dashboard{max-width:1200px;margin:0 auto;padding:2rem}
+.dash-header{background:linear-gradient(135deg,rgba(123,47,255,0.2),rgba(255,45,120,0.1));border:1px solid var(--border);border-radius:24px;padding:2rem;display:flex;align-items:center;gap:2rem;margin-bottom:2rem;flex-wrap:wrap;}
+.avatar{width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--pink));display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0;}
+.dash-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+.stat-card{background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:1.5rem;}
+.stat-card .icon{font-size:1.5rem;margin-bottom:0.75rem}
+.stat-card .num{font-family:'Bebas Neue',sans-serif;font-size:2rem}
+.stat-card .lbl{color:var(--muted);font-size:0.78rem;text-transform:uppercase;letter-spacing:1px}
+.dash-grid{display:grid;grid-template-columns:2fr 1fr;gap:2rem}
+.order-item{display:flex;gap:1rem;align-items:center;padding:1rem;border-bottom:1px solid var(--border);}
+.order-item:last-child{border-bottom:none}
+.order-item img{width:60px;height:60px;border-radius:10px;object-fit:cover}
+.order-status{margin-left:auto;padding:0.3rem 0.8rem;border-radius:100px;font-size:0.72rem;font-weight:600;}
+.status-delivered{background:rgba(200,255,0,0.1);color:var(--acid)}
+.status-shipped{background:rgba(0,245,255,0.1);color:var(--cyan)}
+.status-processing{background:rgba(123,47,255,0.15);color:#a78bfa}
+.status-pending{background:rgba(255,140,0,0.15);color:#FFB800}
+.status-cancelled{background:rgba(255,45,120,0.15);color:var(--pink)}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;max-width:1100px;margin:0 auto;padding:2rem}
+.detail-imgs{position:relative}
+.detail-main-img{width:100%;aspect-ratio:1;border-radius:24px;object-fit:cover;background:var(--dark2);}
+.detail-thumbs{display:flex;gap:0.75rem;margin-top:1rem}
+.detail-thumb{width:70px;height:70px;border-radius:12px;object-fit:cover;cursor:pointer;border:2px solid transparent;transition:all 0.2s;}
+.detail-thumb.active,.detail-thumb:hover{border-color:var(--violet)}
+.detail-info .brand{color:var(--muted);font-size:0.8rem;text-transform:uppercase;letter-spacing:2px}
+.detail-info h1{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;margin:0.5rem 0}
+.detail-info .price-row{display:flex;align-items:center;gap:1rem;margin:1rem 0}
+.detail-info .price{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--acid)}
+.detail-info .og-price{font-size:1.1rem;color:var(--muted);text-decoration:line-through}
+.size-grid{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1rem 0}
+.size-btn{width:52px;height:52px;border-radius:12px;background:var(--glass);border:1px solid var(--border);color:var(--text);font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;}
+.size-btn:hover,.size-btn.selected{background:rgba(123,47,255,0.2);border-color:var(--violet);color:var(--acid);}
+.color-opts{display:flex;gap:0.75rem;margin:1rem 0}
+.color-dot{width:32px;height:32px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all 0.2s;}
+.color-dot.selected,.color-dot:hover{border-color:#fff;transform:scale(1.1)}
+.detail-actions{display:flex;gap:1rem;margin-top:1.5rem}
+.detail-actions .btn-primary{flex:1;justify-content:center}
+.features{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-top:1.5rem}
+.feature{background:var(--glass);border:1px solid var(--border);border-radius:12px;padding:0.75rem 1rem;display:flex;align-items:center;gap:0.5rem;font-size:0.82rem;color:var(--muted);}
+.search-wrap{position:relative;max-width:500px}
+.search-wrap input{padding-left:2.8rem !important}
+.search-icon{position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:1rem}
+.spinner{width:40px;height:40px;border-radius:50%;border:3px solid var(--dark3);border-top-color:var(--violet);animation:spin 0.7s linear infinite;}
+.loading-wrap{display:flex;align-items:center;justify-content:center;min-height:300px}
+.card-tag{position:absolute;top:12px;left:12px;z-index:2;}
+.empty-state{text-align:center;padding:4rem 2rem}
+.empty-state .icon{font-size:4rem;margin-bottom:1rem;opacity:0.5}
+.empty-state h3{font-family:'Syne',sans-serif;font-size:1.5rem;margin-bottom:0.5rem}
+.empty-state p{color:var(--muted)}
+.toast{position:fixed;bottom:2rem;right:2rem;z-index:10000;background:var(--dark3);border:1px solid rgba(200,255,0,0.3);color:var(--text);padding:1rem 1.5rem;border-radius:14px;display:flex;align-items:center;gap:0.75rem;animation:toastIn 0.3s ease;font-size:0.9rem;box-shadow:0 8px 30px rgba(0,0,0,0.5);max-width:360px;}
+.toast.error{border-color:rgba(255,45,120,0.4)}
+.toast .check{width:24px;height:24px;background:var(--acid);color:var(--dark);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:800;flex-shrink:0;}
+.toast .err-icon{width:24px;height:24px;background:var(--pink);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:800;flex-shrink:0;}
+.api-banner{background:rgba(200,255,0,0.08);border:1px solid rgba(200,255,0,0.2);border-radius:12px;padding:0.75rem 1.2rem;margin-bottom:1.5rem;font-size:0.82rem;color:var(--acid);display:flex;align-items:center;gap:0.5rem;}
+.api-offline{background:rgba(255,45,120,0.08);border:1px solid rgba(255,45,120,0.2);border-radius:12px;padding:0.75rem 1.2rem;margin-bottom:1.5rem;font-size:0.82rem;color:var(--pink);display:flex;align-items:center;gap:0.5rem;}
+
+@media(max-width:768px){
+  .nav-links{display:none}.mobile-nav-btn{display:block}
+  .hero-image{display:none}.hero-title{font-size:4rem}
+  .hero-stats{gap:1.5rem;flex-wrap:wrap}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .checkout-grid{grid-template-columns:1fr}
+  .detail-grid{grid-template-columns:1fr}
+  .dash-stats{grid-template-columns:1fr 1fr}
+  .dash-grid{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+  .products-grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+}
+@media(max-width:480px){
+  .navbar{padding:0 1rem}.section{padding:3rem 1rem}
+  .footer-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useEffect,useCallback,useRef,createContext,useContext}=React;
+
+// ═══════════════════════════════════════════════════════════════
+//  API LAYER — all calls to your Express backend
+//  Backend must be running at http://localhost:5000
+// ═══════════════════════════════════════════════════════════════
+const API_BASE = 'http://localhost:5000/api';
+
+async function apiFetch(path, options={}) {
+  const token = localStorage.getItem('sole_token');
+  const res = await fetch(`${API_BASE}${path}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    ...options,
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Request failed');
+  return data;
+}
+
+const API = {
+  // Auth
+  register:  (d)      => apiFetch('/auth/register',       { method:'POST', body:JSON.stringify(d) }),
+  login:     (d)      => apiFetch('/auth/login',          { method:'POST', body:JSON.stringify(d) }),
+  me:        ()       => apiFetch('/auth/me'),
+  profile:   (d)      => apiFetch('/auth/profile',        { method:'PUT',  body:JSON.stringify(d) }),
+
+  // Products
+  products:  (q='')   => apiFetch(`/products${q}`),
+  featured:  ()       => apiFetch('/products/featured'),
+  product:   (id)     => apiFetch(`/products/${id}`),
+  reviews:   (id)     => apiFetch(`/products/${id}/reviews`),
+  addReview: (id,d)   => apiFetch(`/products/${id}/reviews`, { method:'POST', body:JSON.stringify(d) }),
+
+  // Cart
+  getCart:      ()    => apiFetch('/cart'),
+  addToCart:    (d)   => apiFetch('/cart/items',        { method:'POST',   body:JSON.stringify(d) }),
+  updateCart:   (id,d)=> apiFetch(`/cart/items/${id}`,  { method:'PUT',    body:JSON.stringify(d) }),
+  removeCart:   (id)  => apiFetch(`/cart/items/${id}`,  { method:'DELETE' }),
+  clearCart:    ()    => apiFetch('/cart',              { method:'DELETE' }),
+
+  // Orders
+  placeOrder:  (d)    => apiFetch('/orders',            { method:'POST', body:JSON.stringify(d) }),
+  myOrders:    ()     => apiFetch('/orders?limit=50'),
+  cancelOrder: (id)   => apiFetch(`/orders/${id}/cancel`,{ method:'PUT' }),
+
+  // Wishlist
+  wishlist:    ()     => apiFetch('/wishlist'),
+  addWishlist: (pid)  => apiFetch('/wishlist',          { method:'POST',   body:JSON.stringify({productId:pid}) }),
+  rmWishlist:  (pid)  => apiFetch(`/wishlist/${pid}`,   { method:'DELETE' }),
+
+  // Dashboard
+  stats:       ()     => apiFetch('/dashboard/stats'),
+
+  // Categories
+  categories:  ()     => apiFetch('/categories'),
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  FALLBACK DATA — shown when backend is offline
+// ═══════════════════════════════════════════════════════════════
+const FALLBACK_PRODUCTS=[
+  {id:'1',name:"AirEdge Pro X",brand:"NIKE",price:189,original_price:240,category:"Running",colors:[{hex:"#FF2D78"},{hex:"#1a1a2e"},{hex:"#C8FF00"}],sizes:[7,8,9,10,11,12],badge:"Hot",main_image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80",images:["https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80","https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=600&q=80"],description:"Engineered for elite runners who demand peak performance. Lightweight mesh upper keeps you cool, while the carbon fiber plate delivers explosive energy return.",rating:4.8,review_count:124},
+  {id:'2',name:"UrbanDrift Classic",brand:"ADIDAS",price:145,original_price:145,category:"Casual",colors:[{hex:"#7B2FFF"},{hex:"#F0F0FF"},{hex:"#080810"}],sizes:[6,7,8,9,10,11],badge:"New",main_image:"https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=600&q=80",images:["https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=600&q=80","https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=600&q=80"],description:"Where street culture meets premium craftsmanship. Built for the city adventurer.",rating:4.6,review_count:89},
+  {id:'3',name:"SpeedForce Elite",brand:"PUMA",price:215,original_price:280,category:"Sports",colors:[{hex:"#00F5FF"},{hex:"#FF2D78"},{hex:"#1a1a2e"}],sizes:[7,8,9,10,11],badge:"Sale",main_image:"https://images.unsplash.com/photo-1514989940723-e8e51635b782?w=600&q=80",images:["https://images.unsplash.com/photo-1514989940723-e8e51635b782?w=600&q=80"],description:"40% more energy return than standard cushioning.",rating:4.9,review_count:201},
+  {id:'4',name:"CloudWalk Luxe",brand:"NEW BALANCE",price:165,original_price:165,category:"Casual",colors:[{hex:"#C8FF00"},{hex:"#808080"},{hex:"#1a1a2e"}],sizes:[6,7,8,9,10,11,12],badge:"New",main_image:"https://images.unsplash.com/photo-1539185441755-769473a23570?w=600&q=80",images:["https://images.unsplash.com/photo-1539185441755-769473a23570?w=600&q=80"],description:"All-day comfort meets refined aesthetics.",rating:4.7,review_count:67},
+  {id:'5',name:"StrikeFlex TR",brand:"NIKE",price:132,original_price:175,category:"Sports",colors:[{hex:"#FF8C00"},{hex:"#1a1a2e"},{hex:"#FF2D78"}],sizes:[7,8,9,10,11],badge:"Sale",main_image:"https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=600&q=80",images:["https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=600&q=80"],description:"Multi-surface performance with aggressive outsole tread.",rating:4.5,review_count:44},
+  {id:'6',name:"RetroJoy 90s",brand:"REEBOK",price:110,original_price:110,category:"Casual",colors:[{hex:"#FF2D78"},{hex:"#ffffff"},{hex:"#4169E1"}],sizes:[6,7,8,9,10,11,12],badge:"Hot",main_image:"https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=600&q=80",images:["https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=600&q=80"],description:"Nostalgia reimagined for the present.",rating:4.4,review_count:156},
+  {id:'7',name:"TerraGrip ADV",brand:"SALOMON",price:195,original_price:195,category:"Running",colors:[{hex:"#00FF88"},{hex:"#FF4500"},{hex:"#1a1a2e"}],sizes:[7,8,9,10,11,12],badge:"New",main_image:"https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=600&q=80",images:["https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=600&q=80"],description:"360° Sensifit system for precise handling on technical terrain.",rating:4.8,review_count:33},
+  {id:'8',name:"VelvetStep Premier",brand:"CONVERSE",price:98,original_price:120,category:"Casual",colors:[{hex:"#7B2FFF"},{hex:"#1a1a2e"},{hex:"#F0F0FF"}],sizes:[6,7,8,9,10,11],badge:"Sale",main_image:"https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=600&q=80",images:["https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=600&q=80"],description:"Premium velvet upper with ortholite cushioning.",rating:4.3,review_count:78},
+];
+
+// ═══════════════════════════════════════════════════════════════
+//  CONTEXT
+// ═══════════════════════════════════════════════════════════════
+const AppCtx = createContext(null);
+function useApp(){ return useContext(AppCtx); }
+
+// ═══════════════════════════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════════════════════════
+function Toast({message,type,onDone}){
+  useEffect(()=>{ const t=setTimeout(onDone,3000); return()=>clearTimeout(t); },[]);
+  return(
+    <div className={"toast"+(type==='error'?' error':'')}>
+      {type==='error'
+        ? <div className="err-icon">✕</div>
+        : <div className="check">✓</div>
+      }
+      <span>{message}</span>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  NAVBAR
+// ═══════════════════════════════════════════════════════════════
+function Navbar(){
+  const {page,setPage,cartItems,user,logout,mobileOpen,setMobileOpen}=useApp();
+  const count = cartItems.reduce((s,i)=>s+i.qty,0);
+  const navs=[{label:"Home",p:"home"},{label:"Shop",p:"products"},{label:"Dashboard",p:"dashboard"}];
+  return(
+    <>
+    <nav className="navbar">
+      <div className="nav-logo" onClick={()=>setPage("home")}>SOLE</div>
+      <div className="nav-links">
+        {navs.map(n=>(
+          <div key={n.p} className={"nav-link"+(page===n.p?" active":"")} onClick={()=>setPage(n.p)}>{n.label}</div>
+        ))}
+      </div>
+      <div className="nav-actions">
+        {user
+          ? <>
+              <span style={{color:'var(--muted)',fontSize:'0.82rem'}}>Hi, {user.name?.split(' ')[0]}</span>
+              <button className="nav-btn" onClick={logout}>Log out</button>
+            </>
+          : <button className="nav-btn" onClick={()=>setPage("login")}>Sign in</button>
+        }
+        <button className="cart-btn" onClick={()=>setPage("cart")}>
+          🛒 Cart {count>0&&<span className="cart-count">{count}</span>}
+        </button>
+        <button className="mobile-nav-btn" onClick={()=>setMobileOpen(o=>!o)}>
+          {mobileOpen?"✕":"☰"}
+        </button>
+      </div>
+    </nav>
+    {mobileOpen&&(
+      <div className="mobile-menu">
+        {navs.map(n=>(
+          <div key={n.p} className="nav-link" onClick={()=>{setPage(n.p);setMobileOpen(false)}}>{n.label}</div>
+        ))}
+        {user
+          ? <div className="nav-link" onClick={()=>{logout();setMobileOpen(false)}}>Log out</div>
+          : <div className="nav-link" onClick={()=>{setPage("login");setMobileOpen(false)}}>Sign in</div>
+        }
+        <div className="nav-link" onClick={()=>{setPage("cart");setMobileOpen(false)}}>Cart ({count})</div>
+      </div>
+    )}
+    </>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  FOOTER
+// ═══════════════════════════════════════════════════════════════
+function Footer(){
+  const {setPage}=useApp();
+  return(
+    <footer className="footer">
+      <div className="footer-grid">
+        <div className="footer-brand">
+          <div className="logo">SOLE</div>
+          <p>Premium footwear for the bold generation. Every step is a statement.</p>
+        </div>
+        <div className="footer-col">
+          <h4>Shop</h4>
+          <a onClick={()=>setPage("products")}>All Shoes</a>
+          <a onClick={()=>setPage("products")}>Running</a>
+          <a onClick={()=>setPage("products")}>Casual</a>
+          <a onClick={()=>setPage("products")}>Sports</a>
+        </div>
+        <div className="footer-col">
+          <h4>Account</h4>
+          <a onClick={()=>setPage("login")}>Sign In</a>
+          <a onClick={()=>setPage("signup")}>Create Account</a>
+          <a onClick={()=>setPage("dashboard")}>Dashboard</a>
+          <a onClick={()=>setPage("cart")}>My Cart</a>
+        </div>
+        <div className="footer-col">
+          <h4>Company</h4>
+          <a>About Us</a><a>Careers</a><a>Sustainability</a><a>Press</a>
+        </div>
+      </div>
+      <div className="footer-bottom">
+        <p>© 2025 SOLE Premium Footwear. All rights reserved.</p>
+        <p>Powered by PostgreSQL + Express + React 💜</p>
+      </div>
+    </footer>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PRODUCT CARD
+// ═══════════════════════════════════════════════════════════════
+function ProductCard({p,onAdd,onBuy,onClick}){
+  const badgeClass = p.badge==="Sale"?"badge-sale":p.badge==="New"?"badge-new":"badge-hot";
+  const colors = Array.isArray(p.colors) ? p.colors : [];
+  const discount = p.original_price > p.price
+    ? Math.round((1-p.price/p.original_price)*100) : 0;
+  return(
+    <div className="card product-card" style={{cursor:"pointer"}}>
+      <div className="img-wrap" onClick={onClick}>
+        <img src={p.main_image} alt={p.name} loading="lazy"/>
+        <div className="card-tag">
+          {p.badge && <span className={"badge "+badgeClass}>{p.badge}</span>}
+        </div>
+        {discount>0 && (
+          <span style={{position:"absolute",top:12,right:12,background:"var(--pink)",color:"#fff",padding:"0.2rem 0.5rem",borderRadius:8,fontSize:"0.7rem",fontWeight:700}}>-{discount}%</span>
+        )}
+        <div className="quick-actions">
+          <button className="quick-btn add" onClick={e=>{e.stopPropagation();onAdd(p);}}>Add to Cart</button>
+          <button className="quick-btn buy"  onClick={e=>{e.stopPropagation();onBuy(p);}}>Buy Now</button>
+        </div>
+      </div>
+      <div className="card-body" onClick={onClick}>
+        <div className="brand">{p.brand}</div>
+        <div className="name">{p.name}</div>
+        <div style={{display:"flex",alignItems:"center",gap:"0.5rem",marginTop:"0.4rem"}}>
+          <div className="price">${p.price}</div>
+          {p.original_price>p.price&&<div className="og-price">${p.original_price}</div>}
+        </div>
+        <div style={{display:"flex",alignItems:"center",gap:"0.3rem",marginTop:"0.4rem"}}>
+          <span style={{color:"#FFB800",fontSize:"0.78rem"}}>
+            {"★".repeat(Math.round(p.rating||4))}{"☆".repeat(5-Math.round(p.rating||4))}
+          </span>
+          <span style={{color:"var(--muted)",fontSize:"0.72rem"}}>({p.review_count||0})</span>
+        </div>
+        <div style={{display:"flex",gap:"0.4rem",marginTop:"0.75rem"}}>
+          {colors.slice(0,3).map((c,i)=>(
+            <div key={i} style={{width:14,height:14,borderRadius:"50%",background:typeof c==='object'?c.hex:c,border:"1px solid rgba(255,255,255,0.2)"}}/>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  HOME PAGE
+// ═══════════════════════════════════════════════════════════════
+function HomePage(){
+  const {setPage,setDetailProduct,addToCart,buyNow,apiOnline}=useApp();
+  const [featured,setFeatured]=useState([]);
+  const [loading,setLoading]=useState(true);
+
+  useEffect(()=>{
+    (async()=>{
+      try{
+        const data = await API.featured();
+        setFeatured(data.products||[]);
+      } catch {
+        setFeatured(FALLBACK_PRODUCTS);
+      } finally { setLoading(false); }
+    })();
+  },[]);
+
+  const handleAdd = p => addToCart(p);
+  const handleBuy = p => buyNow(p);
+  const handleClick = p => { setDetailProduct(p); setPage("detail"); };
+
+  return(
+    <div className="page">
+      {/* Hero */}
+      <div className="hero">
+        <div className="hero-grid"/>
+        <div className="hero-content">
+          <div style={{maxWidth:600}}>
+            {!apiOnline && (
+              <div className="api-offline" style={{marginBottom:"1rem"}}>
+                ⚠️ Backend offline — showing demo data. Start your Express server to enable full features.
+              </div>
+            )}
+            <div className="hero-eyebrow animate-in">
+              <span>✦ New Season 2025</span>
+            </div>
+            <h1 className="hero-title animate-in" style={{animationDelay:"0.1s"}}>
+              <span className="line1">STEP INTO</span>
+              <span className="line2">THE FUTURE</span>
+            </h1>
+            <p className="hero-sub animate-in" style={{animationDelay:"0.2s"}}>
+              Discover footwear engineered for performance, crafted for culture.
+              Bold designs that make every step unforgettable.
+            </p>
+            <div className="hero-actions animate-in" style={{animationDelay:"0.3s"}}>
+              <button className="btn-primary" onClick={()=>setPage("products")}>Shop Now →</button>
+              <button className="btn-outline" onClick={()=>setPage("products")}>View Collections</button>
+            </div>
+            <div className="hero-stats animate-in" style={{animationDelay:"0.4s"}}>
+              <div className="stat"><div className="num">200+</div><div className="label">Styles</div></div>
+              <div className="stat"><div className="num">50K+</div><div className="label">Customers</div></div>
+              <div className="stat"><div className="num">4.9★</div><div className="label">Rating</div></div>
+            </div>
+          </div>
+        </div>
+        <div className="hero-image">
+          <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=900&q=90" alt="Hero shoe"/>
+        </div>
+      </div>
+
+      {/* Marquee */}
+      <div className="marquee-wrap">
+        <div className="marquee-inner">
+          {[...Array(2)].map((_,xi)=>(
+            <React.Fragment key={xi}>
+              {["RUNNING","CASUAL","SPORTS","NEW ARRIVALS","EXCLUSIVE DROPS","LIMITED EDITION","BESTSELLERS","TRENDING"].map((t,i)=>(
+                <div key={t+i} className={"marquee-item"+(i%3===0?" accent":"")}>{t} &nbsp;✦&nbsp;</div>
+              ))}
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+
+      {/* Featured */}
+      <div className="section">
+        <div className="section-header" style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end",flexWrap:"wrap",gap:"1rem"}}>
+          <div>
+            <div className="section-eyebrow">✦ Curated for you</div>
+            <h2 className="section-title">Featured <span>Drops</span></h2>
+          </div>
+          <button className="btn-outline" onClick={()=>setPage("products")}>View All →</button>
+        </div>
+        {loading ? (
+          <div className="loading-wrap"><div className="spinner"/></div>
+        ) : (
+          <div className="products-grid">
+            {featured.slice(0,4).map(p=>(
+              <ProductCard key={p.id} p={p} onAdd={handleAdd} onBuy={handleBuy} onClick={()=>handleClick(p)}/>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Sale Banner */}
+      <div style={{maxWidth:1200,margin:"0 auto",padding:"0 2rem"}}>
+        <div style={{background:"linear-gradient(135deg,rgba(123,47,255,0.3),rgba(255,45,120,0.2))",border:"1px solid var(--border)",borderRadius:24,padding:"3rem",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:"2rem",position:"relative",overflow:"hidden"}}>
+          <div style={{position:"absolute",right:-40,top:-40,width:200,height:200,borderRadius:"50%",background:"rgba(200,255,0,0.07)"}}/>
+          <div>
+            <div style={{color:"var(--acid)",fontSize:"0.75rem",fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:"0.5rem"}}>Limited Time</div>
+            <h3 style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:"2.5rem",lineHeight:1}}>UP TO 40% OFF</h3>
+            <p style={{color:"var(--muted)",marginTop:"0.5rem"}}>On selected styles. Limited stock, unlimited style.</p>
+          </div>
+          <button className="btn-acid" onClick={()=>setPage("products")}>Shop Sale →</button>
+        </div>
+      </div>
+
+      {/* More */}
+      <div className="section">
+        <div className="section-header">
+          <div className="section-eyebrow">✦ All categories</div>
+          <h2 className="section-title">More to <span>Explore</span></h2>
+        </div>
+        {loading ? (
+          <div className="loading-wrap"><div className="spinner"/></div>
+        ) : (
+          <div className="products-grid">
+            {featured.slice(4).map(p=>(
+              <ProductCard key={p.id} p={p} onAdd={handleAdd} onBuy={handleBuy} onClick={()=>handleClick(p)}/>
+            ))}
+          </div>
+        )}
+      </div>
+      <Footer/>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PRODUCTS PAGE
+// ═══════════════════════════════════════════════════════════════
+function ProductsPage(){
+  const {setPage,setDetailProduct,addToCart,buyNow}=useApp();
+  const [products,setProducts]=useState([]);
+  const [loading,setLoading]=useState(true);
+  const [cat,setCat]=useState("All");
+  const [sort,setSort]=useState("newest");
+  const [search,setSearch]=useState("");
+  const [total,setTotal]=useState(0);
+
+  useEffect(()=>{
+    const load=async()=>{
+      setLoading(true);
+      try {
+        const params=new URLSearchParams({sort,limit:20});
+        if(cat!=="All") params.set("category",cat.toLowerCase());
+        if(search)       params.set("search",search);
+        const data=await API.products("?"+params.toString());
+        setProducts(data.products||[]);
+        setTotal(data.total||0);
+      } catch {
+        let f=[...FALLBACK_PRODUCTS];
+        if(cat!=="All") f=f.filter(p=>p.category===cat);
+        if(search) f=f.filter(p=>p.name.toLowerCase().includes(search.toLowerCase())||p.brand.toLowerCase().includes(search.toLowerCase()));
+        if(sort==="price_asc") f.sort((a,b)=>a.price-b.price);
+        if(sort==="price_desc") f.sort((a,b)=>b.price-a.price);
+        setProducts(f); setTotal(f.length);
+      } finally { setLoading(false); }
+    };
+    const t=setTimeout(load,300);
+    return()=>clearTimeout(t);
+  },[cat,sort,search]);
+
+  const handleClick=p=>{ setDetailProduct(p); setPage("detail"); };
+
+  return(
+    <div className="page">
+      <div className="section">
+        <div className="section-eyebrow">✦ Our Collection</div>
+        <h1 className="section-title" style={{marginBottom:"2rem"}}>All <span>Sneakers</span></h1>
+        <div style={{display:"flex",gap:"1rem",flexWrap:"wrap",marginBottom:"2rem",alignItems:"center"}}>
+          <div className="search-wrap" style={{flex:"1 1 240px"}}>
+            <span className="search-icon">🔍</span>
+            <input className="input-field" placeholder="Search shoes, brands..." value={search} onChange={e=>setSearch(e.target.value)}/>
+          </div>
+          <div style={{display:"flex",gap:"0.5rem",flexWrap:"wrap"}}>
+            {["All","Running","Casual","Sports"].map(c=>(
+              <button key={c} className={"filter-chip"+(cat===c?" active":"")} onClick={()=>setCat(c)}>{c}</button>
+            ))}
+          </div>
+          <select className="input-field" style={{width:"auto",flex:"0 0 auto"}} value={sort} onChange={e=>setSort(e.target.value)}>
+            <option value="newest">Sort: Newest</option>
+            <option value="price_asc">Price: Low to High</option>
+            <option value="price_desc">Price: High to Low</option>
+            <option value="rating">Top Rated</option>
+          </select>
+        </div>
+        <div style={{color:"var(--muted)",fontSize:"0.85rem",marginBottom:"1.5rem"}}>
+          {loading?"Loading...":`${total} products found`}
+        </div>
+        {loading ? (
+          <div className="loading-wrap"><div className="spinner"/></div>
+        ) : products.length===0 ? (
+          <div className="empty-state">
+            <div className="icon">👟</div>
+            <h3>No shoes found</h3>
+            <p>Try adjusting your search or filters</p>
+          </div>
+        ) : (
+          <div className="products-grid">
+            {products.map(p=>(
+              <ProductCard key={p.id} p={p}
+                onAdd={addToCart} onBuy={()=>buyNow(p)}
+                onClick={()=>handleClick(p)}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+      <Footer/>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PRODUCT DETAIL PAGE
+// ═══════════════════════════════════════════════════════════════
+function DetailPage(){
+  const {detailProduct,setPage,addToCart,buyNow,user,showToast}=useApp();
+  const [product,setProduct]=useState(detailProduct);
+  const [reviews,setReviews]=useState([]);
+  const [loading,setLoading]=useState(!detailProduct);
+  const [selectedImg,setSelectedImg]=useState(0);
+  const [selectedSize,setSelectedSize]=useState(null);
+  const [selectedColor,setSelectedColor]=useState(0);
+  const [adding,setAdding]=useState(false);
+  const [revForm,setRevForm]=useState({rating:5,title:"",body:""});
+  const [submittingRev,setSubmittingRev]=useState(false);
+
+  useEffect(()=>{
+    if(!product) return;
+    API.reviews(product.id).then(d=>setReviews(d.reviews||[])).catch(()=>{});
+  },[product]);
+
+  if(!product) return(
+    <div className="page">
+      <div style={{textAlign:"center",padding:"4rem"}}>
+        <p style={{color:"var(--muted)"}}>Product not found.</p>
+        <button className="btn-primary" style={{marginTop:"1rem"}} onClick={()=>setPage("products")}>Back to Shop</button>
+      </div>
+    </div>
+  );
+
+  const imgs   = Array.isArray(product.images)&&product.images.length ? product.images : [product.main_image];
+  const sizes  = Array.isArray(product.sizes)  ? product.sizes  : [];
+  const colors = Array.isArray(product.colors) ? product.colors : [];
+  const discount = product.original_price>product.price ? Math.round((1-product.price/product.original_price)*100):0;
+
+  const handleAdd=async()=>{
+    setAdding(true);
+    const colorHex = colors[selectedColor]?.hex||null;
+    await addToCart(product, selectedSize, colorHex);
+    setAdding(false);
+  };
+
+  const handleBuy=async()=>{
+    const colorHex = colors[selectedColor]?.hex||null;
+    await addToCart(product, selectedSize, colorHex);
+    setPage("cart");
+  };
+
+  const submitReview=async()=>{
+    if(!user){ showToast("Please sign in to leave a review","error"); return; }
+    setSubmittingRev(true);
+    try {
+      await API.addReview(product.id, revForm);
+      showToast("Review submitted!");
+      const d=await API.reviews(product.id);
+      setReviews(d.reviews||[]);
+      setRevForm({rating:5,title:"",body:""});
+    } catch(e){ showToast(e.message,"error"); }
+    finally{ setSubmittingRev(false); }
+  };
+
+  return(
+    <div className="page">
+      <div style={{maxWidth:1100,margin:"0 auto",padding:"1.5rem 2rem 0"}}>
+        <button className="btn-outline" style={{padding:"0.5rem 1rem",fontSize:"0.8rem"}} onClick={()=>setPage("products")}>← Back to Shop</button>
+      </div>
+      <div className="detail-grid">
+        <div className="detail-imgs animate-in">
+          <img className="detail-main-img" src={imgs[selectedImg]} alt={product.name}/>
+          {discount>0&&<span style={{position:"absolute",top:16,right:16,background:"var(--pink)",color:"#fff",padding:"0.3rem 0.8rem",borderRadius:100,fontSize:"0.8rem",fontWeight:700}}>-{discount}% OFF</span>}
+          <div className="detail-thumbs">
+            {imgs.map((img,i)=>(
+              <img key={i} className={"detail-thumb"+(selectedImg===i?" active":"")} src={img} alt="" onClick={()=>setSelectedImg(i)}/>
+            ))}
+          </div>
+        </div>
+        <div className="detail-info animate-slide" style={{animationDelay:"0.1s"}}>
+          <div className="brand">{product.brand}</div>
+          <h1>{product.name}</h1>
+          <div style={{display:"flex",gap:"0.5rem",margin:"0.75rem 0"}}>
+            {product.badge&&<span className={"badge "+(product.badge==="Sale"?"badge-sale":product.badge==="New"?"badge-new":"badge-hot")}>{product.badge}</span>}
+            <span className="badge" style={{background:"rgba(0,245,255,0.1)",color:"var(--cyan)",border:"1px solid rgba(0,245,255,0.2)"}}>{product.category}</span>
+          </div>
+          <div style={{display:"flex",alignItems:"center",gap:"0.5rem",marginBottom:"0.5rem"}}>
+            <span style={{color:"#FFB800"}}>{"★".repeat(Math.round(product.rating||4))}{"☆".repeat(5-Math.round(product.rating||4))}</span>
+            <span style={{color:"var(--muted)",fontSize:"0.85rem"}}>({reviews.length} reviews)</span>
+          </div>
+          <div className="price-row">
+            <div className="price">${product.price}</div>
+            {product.original_price>product.price&&<div className="og-price">${product.original_price}</div>}
+          </div>
+          <p style={{color:"var(--muted)",lineHeight:1.7,fontSize:"0.9rem"}}>{product.description}</p>
+
+          {colors.length>0&&(
+            <div style={{marginTop:"1.5rem"}}>
+              <div style={{fontSize:"0.82rem",color:"var(--muted)",marginBottom:"0.5rem",fontWeight:500}}>
+                COLOR — <span style={{color:"var(--text)"}}>{colors[selectedColor]?.name||""}</span>
+              </div>
+              <div className="color-opts">
+                {colors.map((c,i)=>(
+                  <div key={i} className={"color-dot"+(selectedColor===i?" selected":"")}
+                    style={{background:typeof c==='object'?c.hex:c}} onClick={()=>setSelectedColor(i)}/>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {sizes.length>0&&(
+            <div style={{marginTop:"1rem"}}>
+              <div style={{fontSize:"0.82rem",color:"var(--muted)",marginBottom:"0.5rem",fontWeight:500}}>
+                SIZE (US) {selectedSize&&<span style={{color:"var(--acid)"}}>— {selectedSize}</span>}
+              </div>
+              <div className="size-grid">
+                {sizes.map(s=>(
+                  <button key={s} className={"size-btn"+(selectedSize===s?" selected":"")} onClick={()=>setSelectedSize(s)}>{s}</button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="detail-actions">
+            <button className="btn-primary" onClick={handleAdd} disabled={adding} style={{flex:1,justifyContent:"center"}}>
+              {adding?"Adding...":"Add to Cart 🛒"}
+            </button>
+            <button className="btn-acid" onClick={handleBuy}>Buy Now</button>
+          </div>
+
+          <div className="features">
+            <div className="feature">🚚 Free shipping over $150</div>
+            <div className="feature">↩️ 30-day returns</div>
+            <div className="feature">✅ Authenticity guaranteed</div>
+            <div className="feature">💳 Secure checkout</div>
+          </div>
+
+          {product.stock!==undefined&&(
+            <div style={{marginTop:"1rem",fontSize:"0.82rem"}}>
+              {product.stock<20
+                ? <span style={{color:"var(--pink)"}}>⚡ Only {product.stock} left!</span>
+                : <span style={{color:"var(--acid)"}}>✓ In stock ({product.stock} available)</span>
+              }
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Reviews */}
+      <div className="section" style={{borderTop:"1px solid var(--border)",marginTop:"2rem"}}>
+        <div style={{marginBottom:"2rem"}}>
+          <div className="section-eyebrow">✦ Customer reviews</div>
+          <h2 className="section-title">What They're <span>Saying</span></h2>
+        </div>
+        {reviews.length>0&&(
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))",gap:"1rem",marginBottom:"2rem"}}>
+            {reviews.map(r=>(
+              <div key={r.id} style={{background:"var(--glass)",border:"1px solid var(--border)",borderRadius:16,padding:"1.2rem"}}>
+                <div style={{display:"flex",justifyContent:"space-between",marginBottom:"0.5rem"}}>
+                  <span style={{fontWeight:600,fontSize:"0.9rem"}}>{r.user_name}</span>
+                  <span style={{color:"#FFB800"}}>{"★".repeat(r.rating)}{"☆".repeat(5-r.rating)}</span>
+                </div>
+                {r.title&&<div style={{fontWeight:600,marginBottom:"0.25rem",fontSize:"0.85rem"}}>{r.title}</div>}
+                <p style={{color:"var(--muted)",fontSize:"0.85rem",lineHeight:1.6}}>{r.body}</p>
+                <div style={{color:"var(--muted)",fontSize:"0.75rem",marginTop:"0.75rem"}}>{new Date(r.created_at).toLocaleDateString()}</div>
+              </div>
+            ))}
+          </div>
+        )}
+        {/* Add review form */}
+        {user&&(
+          <div style={{background:"var(--glass)",border:"1px solid var(--border)",borderRadius:16,padding:"1.5rem",maxWidth:500}}>
+            <h4 style={{fontFamily:"'Syne',sans-serif",fontWeight:700,marginBottom:"1rem"}}>Leave a Review</h4>
+            <div style={{display:"flex",gap:"0.5rem",marginBottom:"1rem"}}>
+              {[1,2,3,4,5].map(n=>(
+                <button key={n} onClick={()=>setRevForm(f=>({...f,rating:n}))} style={{background:"none",border:"none",cursor:"pointer",fontSize:"1.4rem",color:revForm.rating>=n?"#FFB800":"var(--muted)"}}>★</button>
+              ))}
+            </div>
+            <div className="form-group">
+              <label className="input-label">Title</label>
+              <input className="input-field" placeholder="Quick summary" value={revForm.title} onChange={e=>setRevForm(f=>({...f,title:e.target.value}))}/>
+            </div>
+            <div className="form-group">
+              <label className="input-label">Review</label>
+              <textarea className="input-field" rows={3} placeholder="Tell us what you think..." value={revForm.body} onChange={e=>setRevForm(f=>({...f,body:e.target.value}))} style={{resize:"vertical"}}/>
+            </div>
+            <button className="btn-primary" onClick={submitReview} disabled={submittingRev}>
+              {submittingRev?"Submitting...":"Submit Review"}
+            </button>
+          </div>
+        )}
+      </div>
+      <Footer/>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  CART PAGE
+// ═══════════════════════════════════════════════════════════════
+function CartPage(){
+  const {cartItems,cartLoading,updateCartItem,removeCartItem,setPage,user,subtotal,shipping,total}=useApp();
+
+  if(!user) return(
+    <div className="page">
+      <div className="empty-state" style={{paddingTop:"6rem"}}>
+        <div className="icon">🔐</div>
+        <h3>Sign in to view your cart</h3>
+        <p>Your cart is waiting for you.</p>
+        <button className="btn-primary" style={{marginTop:"1rem"}} onClick={()=>setPage("login")}>Sign In</button>
+      </div>
+    </div>
+  );
+
+  return(
+    <div className="page">
+      <div className="cart-page">
+        <h1 style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:"3rem",marginBottom:"2rem"}}>
+          MY CART <span style={{color:"var(--muted)",fontSize:"1.5rem"}}>({cartItems.length} items)</span>
+        </h1>
+        {cartLoading?(
+          <div className="loading-wrap"><div className="spinner"/></div>
+        ):cartItems.length===0?(
+          <div className="empty-state">
+            <div className="icon">🛒</div>
+            <h3>Your cart is empty</h3>
+            <p style={{marginBottom:"1.5rem"}}>Looks like you haven't added anything yet.</p>
+            <button className="btn-primary" onClick={()=>setPage("products")}>Start Shopping</button>
+          </div>
+        ):(
+          <div style={{display:"grid",gridTemplateColumns:"1fr 320px",gap:"2rem",alignItems:"start"}}>
+            <div>
+              {cartItems.map(item=>(
+                <div key={item.id} className="cart-item">
+                  <img src={item.main_image} alt={item.name}/>
+                  <div className="cart-item-info">
+                    <div className="cart-item-name">{item.name}</div>
+                    <div className="cart-item-meta">
+                      {item.brand} · ${item.unit_price} each
+                      {item.size&&` · US ${item.size}`}
+                    </div>
+                    <div style={{marginTop:"0.75rem"}}>
+                      <div className="qty-control" style={{width:"fit-content"}}>
+                        <button className="qty-btn" onClick={()=>item.qty>1?updateCartItem(item.id,item.qty-1):removeCartItem(item.id)}>−</button>
+                        <span className="qty-num">{item.qty}</span>
+                        <button className="qty-btn" onClick={()=>updateCartItem(item.id,item.qty+1)}>+</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{textAlign:"right"}}>
+                    <div style={{fontWeight:700,color:"var(--acid)",fontSize:"1.1rem"}}>${(item.unit_price*item.qty).toFixed(2)}</div>
+                    <button className="remove-btn" onClick={()=>removeCartItem(item.id)}>🗑</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="cart-total" style={{position:"sticky",top:90}}>
+              <h3 style={{fontFamily:"'Syne',sans-serif",fontWeight:700,marginBottom:"1.5rem"}}>Order Summary</h3>
+              <div className="cart-total-row"><span>Subtotal</span><span>${subtotal}</span></div>
+              <div className="cart-total-row"><span>Shipping</span><span>{shipping===0?"Free":"$"+shipping}</span></div>
+              {shipping===0&&<div style={{fontSize:"0.78rem",color:"var(--acid)",marginBottom:"0.75rem"}}>✓ Free shipping unlocked!</div>}
+              <div className="cart-total-row final"><span>Total</span><span>${total}</span></div>
+              <button className="btn-primary" style={{width:"100%",justifyContent:"center",marginTop:"1.5rem"}} onClick={()=>setPage("checkout")}>Checkout →</button>
+              <button className="btn-outline" style={{width:"100%",justifyContent:"center",marginTop:"0.75rem"}} onClick={()=>setPage("products")}>Continue Shopping</button>
+            </div>
+          </div>
+        )}
+      </div>
+      <Footer/>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  CHECKOUT PAGE
+// ═══════════════════════════════════════════════════════════════
+function CheckoutPage(){
+  const {cartItems,clearCartLocal,setPage,user,subtotal,shipping,total,showToast}=useApp();
+  const [step,setStep]=useState(1);
+  const [placing,setPlacing]=useState(false);
+  const [placedOrder,setPlacedOrder]=useState(null);
+  const [form,setForm]=useState({name:user?.name||"",email:user?.email||"",street:"",city:"",state:"",zip:"",card:"4242 4242 4242 4242",expiry:"12/28",cvv:"***"});
+  const upd=k=>e=>setForm(f=>({...f,[k]:e.target.value}));
+
+  if(!user){ setPage("login"); return null; }
+
+  const placeOrder=async()=>{
+    if(!form.street||!form.city||!form.zip){ showToast("Please fill all shipping fields","error"); return; }
+    setPlacing(true);
+    try{
+      const data=await API.placeOrder({
+        shippingAddress:{name:form.name,street:form.street,city:form.city,state:form.state,zip:form.zip,country:"US"},
+        paymentMethod:"card",
+      });
+      setPlacedOrder(data.order);
+      clearCartLocal();
+      setStep(3);
+    } catch(e){
+      showToast(e.message||"Order failed","error");
+    } finally{ setPlacing(false); }
+  };
+
+  if(step===3) return(
+    <div className="page">
+      <div style={{maxWidth:500,margin:"0 auto",padding:"2rem"}}>
+        <div className="success-screen animate-scale">
+          <div className="success-icon">✓</div>
+          <h2 style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:"3rem",marginBottom:"0.5rem"}}>ORDER PLACED!</h2>
+          <p style={{color:"var(--muted)",lineHeight:1.7,marginBottom:"2rem"}}>
+            Your sneakers are on their way! You'll receive a confirmation email shortly.
+          </p>
+          <div style={{background:"var(--glass)",border:"1px solid var(--border)",borderRadius:16,padding:"1.5rem",marginBottom:"2rem",textAlign:"left"}}>
+            <div style={{display:"flex",justifyContent:"space-between",marginBottom:"0.5rem"}}>
+              <span style={{color:"var(--muted)"}}>Order ID</span>
+              <span style={{color:"var(--acid)",fontWeight:700,fontSize:"0.85rem"}}>{placedOrder?.payment_id||"#SOLE-DEMO"}</span>
+            </div>
+            <div style={{display:"flex",justifyContent:"space-between"}}>
+              <span style={{color:"var(--muted)"}}>Amount Paid</span>
+              <span style={{fontWeight:700}}>${placedOrder?.total||total}</span>
+            </div>
+          </div>
+          <div style={{display:"flex",gap:"1rem",justifyContent:"center"}}>
+            <button className="btn-primary" onClick={()=>setPage("dashboard")}>View Dashboard</button>
+            <button className="btn-outline" onClick={()=>setPage("home")}>Back to Home</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  return(
+    <div className="page">
+      <div className="checkout-grid">
+        <div>
+          <h1 style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:"2.5rem",marginBottom:"0.5rem"}}>CHECKOUT</h1>
+          <div style={{display:"flex",gap:"0.5rem",marginBottom:"2rem",alignItems:"center"}}>
+            {["Shipping","Payment","Confirm"].map((s,i)=>(
+              <React.Fragment key={s}>
+                <div style={{display:"flex",alignItems:"center",gap:"0.5rem"}}>
+                  <div style={{width:28,height:28,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",background:step===i+1?"var(--violet)":step>i+1?"var(--acid)":"var(--glass)",border:"1px solid "+(step>=i+1?"var(--violet)":"var(--border)"),color:step>i+1?"var(--dark)":"var(--text)",fontWeight:700,fontSize:"0.8rem"}}>
+                    {step>i+1?"✓":i+1}
+                  </div>
+                  <span style={{fontSize:"0.82rem",color:step===i+1?"var(--text)":"var(--muted)",fontWeight:step===i+1?600:400}}>{s}</span>
+                </div>
+                {i<2&&<div style={{flex:1,height:1,background:"var(--border)"}}/>}
+              </React.Fragment>
+            ))}
+          </div>
+
+          {step===1&&(
+            <div className="form-section animate-in">
+              <h3>Shipping Information</h3>
+              <div className="form-row">
+                <div className="form-group"><label className="input-label">Full Name</label><input className="input-field" value={form.name} onChange={upd("name")} placeholder="Alex Johnson"/></div>
+                <div className="form-group"><label className="input-label">Email</label><input className="input-field" value={form.email} onChange={upd("email")} placeholder="alex@email.com"/></div>
+              </div>
+              <div className="form-group"><label className="input-label">Street Address</label><input className="input-field" value={form.street} onChange={upd("street")} placeholder="123 Main Street"/></div>
+              <div className="form-row">
+                <div className="form-group"><label className="input-label">City</label><input className="input-field" value={form.city} onChange={upd("city")} placeholder="New York"/></div>
+                <div className="form-group"><label className="input-label">ZIP Code</label><input className="input-field" value={form.zip} onChange={upd("zip")} placeholder="10001"/></div>
+              </div>
+              <button className="btn-primary" onClick={()=>setStep(2)}>Continue to Payment →</button>
+            </div>
+          )}
+
+          {step===2&&(
+            <div className="form-section animate-in">
+              <h3>Payment Details</h3>
+              <div className="payment-card">
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                  <span style={{fontSize:"0.75rem",opacity:0.7}}>CREDIT CARD</span>
+                  <span style={{fontSize:"1.2rem"}}>💳</span>
+                </div>
+                <div className="card-num">{form.card}</div>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                  <span style={{fontSize:"0.8rem",opacity:0.8}}>{form.name||"CARDHOLDER NAME"}</span>
+                  <span style={{fontSize:"0.8rem",opacity:0.8}}>{form.expiry}</span>
+                </div>
+              </div>
+              <div className="form-group"><label className="input-label">Card Number</label><input className="input-field" value={form.card} onChange={upd("card")} placeholder="1234 5678 9012 3456"/></div>
+              <div className="form-row">
+                <div className="form-group"><label className="input-label">Expiry Date</label><input className="input-field" value={form.expiry} onChange={upd("expiry")} placeholder="MM/YY"/></div>
+                <div className="form-group"><label className="input-label">CVV</label><input className="input-field" value={form.cvv} onChange={upd("cvv")} placeholder="***"/></div>
+              </div>
+              <div style={{background:"rgba(200,255,0,0.06)",border:"1px solid rgba(200,255,0,0.15)",borderRadius:12,padding:"0.9rem",marginBottom:"1rem",fontSize:"0.82rem",color:"var(--muted)"}}>
+                🔒 Demo payment — no real charges. Order saves to your database.
+              </div>
+              <div style={{display:"flex",gap:"1rem"}}>
+                <button className="btn-outline" onClick={()=>setStep(1)}>← Back</button>
+                <button className="btn-primary" onClick={placeOrder} disabled={placing} style={{flex:1,justifyContent:"center"}}>
+                  {placing?"Placing Order...":"Place Order — $"+total}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Summary */}
+        <div>
+          <div className="cart-total">
+            <h3 style={{fontFamily:"'Syne',sans-serif",fontWeight:700,marginBottom:"1.5rem"}}>Order Summary</h3>
+            {cartItems.map(i=>(
+              <div key={i.id} style={{display:"flex",gap:"0.75rem",marginBottom:"1rem",alignItems:"center"}}>
+                <img src={i.main_image} style={{width:50,height:50,borderRadius:10,objectFit:"cover"}}/>
+                <div style={{flex:1}}>
+                  <div style={{fontSize:"0.85rem",fontWeight:600}}>{i.name}</div>
+                  <div style={{fontSize:"0.75rem",color:"var(--muted)"}}>×{i.qty}</div>
+                </div>
+                <div style={{color:"var(--acid)",fontWeight:700,fontSize:"0.9rem"}}>${(i.unit_price*i.qty).toFixed(2)}</div>
+              </div>
+            ))}
+            <div style={{borderTop:"1px solid var(--border)",paddingTop:"1rem",marginTop:"0.5rem"}}>
+              <div className="cart-total-row"><span style={{color:"var(--muted)"}}>Subtotal</span><span>${subtotal}</span></div>
+              <div className="cart-total-row"><span style={{color:"var(--muted)"}}>Shipping</span><span>{shipping===0?"Free":"$"+shipping}</span></div>
+              <div className="cart-total-row final"><span>Total</span><span>${total}</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  LOGIN PAGE
+// ═══════════════════════════════════════════════════════════════
+function LoginPage(){
+  const {setPage,loginUser,showToast}=useApp();
+  const [email,setEmail]=useState("");
+  const [pass,setPass]=useState("");
+  const [loading,setLoading]=useState(false);
+
+  const handle=async()=>{
+    if(!email||!pass){ showToast("Please fill all fields","error"); return; }
+    setLoading(true);
+    try{
+      await loginUser(email,pass);
+      showToast("Welcome back! 👋");
+      setPage("dashboard");
+    } catch(e){
+      showToast(e.message||"Login failed","error");
+    } finally{ setLoading(false); }
+  };
+
+  return(
+    <div className="auth-page">
+      <div className="auth-card">
+        <h2>WELCOME<br/>BACK</h2>
+        <p className="subtitle">Sign in to your SOLE account</p>
+        <div className="form-group">
+          <label className="input-label">Email</label>
+          <input className="input-field" type="email" placeholder="your@email.com" value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handle()}/>
+        </div>
+        <div className="form-group">
+          <label className="input-label">Password</label>
+          <input className="input-field" type="password" placeholder="••••••••" value={pass} onChange={e=>setPass(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handle()}/>
+        </div>
+        <div style={{display:"flex",justifyContent:"flex-end",marginBottom:"1.5rem"}}>
+          <span style={{color:"var(--violet)",fontSize:"0.82rem",cursor:"pointer"}}>Forgot password?</span>
+        </div>
+        <button className="btn-primary" style={{width:"100%",justifyContent:"center"}} onClick={handle} disabled={loading}>
+          {loading?"Signing in...":"Sign In"}
+        </button>
+        <div className="divider"><span>or continue with</span></div>
+        <button className="social-btn" onClick={()=>showToast("Use email login — Google not configured","error")}>
+          <span style={{fontWeight:800,color:"#4285F4"}}>G</span> Continue with Google
+        </button>
+        <p style={{textAlign:"center",marginTop:"1.5rem",color:"var(--muted)",fontSize:"0.85rem"}}>
+          Don't have an account?{" "}
+          <span style={{color:"var(--acid)",cursor:"pointer",fontWeight:600}} onClick={()=>setPage("signup")}>Sign up free</span>
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SIGNUP PAGE
+// ═══════════════════════════════════════════════════════════════
+function SignupPage(){
+  const {setPage,registerUser,showToast}=useApp();
+  const [form,setForm]=useState({name:"",email:"",pass:""});
+  const [loading,setLoading]=useState(false);
+  const upd=k=>e=>setForm(f=>({...f,[k]:e.target.value}));
+
+  const handle=async()=>{
+    if(!form.name||!form.email||!form.pass){ showToast("Please fill all fields","error"); return; }
+    if(form.pass.length<6){ showToast("Password must be at least 6 characters","error"); return; }
+    setLoading(true);
+    try{
+      await registerUser(form.name,form.email,form.pass);
+      showToast("Account created! Welcome to SOLE 🎉");
+      setPage("dashboard");
+    } catch(e){
+      showToast(e.message||"Registration failed","error");
+    } finally{ setLoading(false); }
+  };
+
+  return(
+    <div className="auth-page">
+      <div className="auth-card">
+        <h2>JOIN<br/>SOLE</h2>
+        <p className="subtitle">Create your account — it's free</p>
+        <div className="form-group">
+          <label className="input-label">Full Name</label>
+          <input className="input-field" placeholder="Alex Johnson" value={form.name} onChange={upd("name")}/>
+        </div>
+        <div className="form-group">
+          <label className="input-label">Email</label>
+          <input className="input-field" type="email" placeholder="your@email.com" value={form.email} onChange={upd("email")}/>
+        </div>
+        <div className="form-group">
+          <label className="input-label">Password</label>
+          <input className="input-field" type="password" placeholder="Min. 6 characters" value={form.pass} onChange={upd("pass")} onKeyDown={e=>e.key==="Enter"&&handle()}/>
+        </div>
+        <button className="btn-acid" style={{width:"100%",marginTop:"0.5rem"}} onClick={handle} disabled={loading}>
+          {loading?"Creating Account...":"Create Account →"}
+        </button>
+        <div className="divider"><span>or</span></div>
+        <button className="social-btn" onClick={()=>showToast("Use email signup — Google not configured","error")}>
+          <span style={{fontWeight:800,color:"#4285F4"}}>G</span> Sign up with Google
+        </button>
+        <p style={{textAlign:"center",marginTop:"1.5rem",color:"var(--muted)",fontSize:"0.82rem"}}>
+          Already have an account?{" "}
+          <span style={{color:"var(--acid)",cursor:"pointer",fontWeight:600}} onClick={()=>setPage("login")}>Sign in</span>
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  DASHBOARD PAGE
+// ═══════════════════════════════════════════════════════════════
+function DashboardPage(){
+  const {user,setPage,setDetailProduct,addToCart,showToast}=useApp();
+  const [stats,setStats]=useState(null);
+  const [orders,setOrders]=useState([]);
+  const [wishlist,setWishlist]=useState([]);
+  const [loading,setLoading]=useState(true);
+  const [cancelling,setCancelling]=useState(null);
+
+  useEffect(()=>{
+    if(!user) return;
+    Promise.all([API.stats(),API.myOrders(),API.wishlist()])
+      .then(([s,o,w])=>{ setStats(s.stats); setOrders(o.orders||[]); setWishlist(w.wishlist||[]); })
+      .catch(()=>{
+        // fallback demo data
+        setStats({totalOrders:4,totalSpent:679,delivered:3,wishlistCount:3,memberTier:"Silver"});
+        setOrders([]);
+        setWishlist(FALLBACK_PRODUCTS.slice(4,7).map(p=>({...p,wishlist_id:p.id})));
+      })
+      .finally(()=>setLoading(false));
+  },[user]);
+
+  const handleCancel=async(orderId)=>{
+    if(!window.confirm("Cancel this order?")) return;
+    setCancelling(orderId);
+    try{
+      await API.cancelOrder(orderId);
+      setOrders(prev=>prev.map(o=>o.id===orderId?{...o,status:"cancelled"}:o));
+      showToast("Order cancelled");
+    } catch(e){ showToast(e.message,"error"); }
+    finally{ setCancelling(null); }
+  };
+
+  const removeFromWishlist=async(productId)=>{
+    try{
+      await API.rmWishlist(productId);
+      setWishlist(w=>w.filter(p=>p.id!==productId));
+      showToast("Removed from wishlist");
+    } catch(e){ showToast(e.message,"error"); }
+  };
+
+  if(!user) return(
+    <div className="page">
+      <div style={{textAlign:"center",padding:"4rem 2rem"}}>
+        <h2 style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:"2.5rem",marginBottom:"1rem"}}>SIGN IN REQUIRED</h2>
+        <p style={{color:"var(--muted)",marginBottom:"2rem"}}>Please sign in to view your dashboard.</p>
+        <button className="btn-primary" onClick={()=>setPage("login")}>Sign In</button>
+      </div>
+    </div>
+  );
+
+  const tierColors={Bronze:"#CD7F32",Silver:"#C0C0C0",Gold:"#C8FF00",Platinum:"#00F5FF"};
+  const tierColor=tierColors[stats?.memberTier||"Bronze"]||"#C8FF00";
+
+  const STATUS_STYLE={
+    delivered:{bg:"rgba(200,255,0,0.1)",color:"var(--acid)"},
+    shipped:{bg:"rgba(0,245,255,0.1)",color:"var(--cyan)"},
+    processing:{bg:"rgba(123,47,255,0.15)",color:"#a78bfa"},
+    pending:{bg:"rgba(255,140,0,0.15)",color:"#FFB800"},
+    cancelled:{bg:"rgba(255,45,120,0.15)",color:"var(--pink)"},
+  };
+
+  return(
+    <div className="page">
+      <div className="dashboard">
+        {/* Header */}
+        <div className="dash-header animate-in">
+          <div className="avatar">{user.name?.[0]?.toUpperCase()||"U"}</div>
+          <div>
+            <div style={{color:"var(--muted)",fontSize:"0.8rem",textTransform:"uppercase",letterSpacing:1}}>Welcome back</div>
+            <h2 style={{fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:"1.8rem"}}>{user.name}</h2>
+            <div style={{color:"var(--muted)",fontSize:"0.85rem"}}>{user.email}</div>
+          </div>
+          <div style={{marginLeft:"auto",display:"flex",gap:"0.75rem",flexWrap:"wrap"}}>
+            {stats?.memberTier&&(
+              <span style={{background:`${tierColor}22`,color:tierColor,border:`1px solid ${tierColor}44`,padding:"0.4rem 1rem",borderRadius:100,fontSize:"0.78rem",fontWeight:700}}>
+                ★ {stats.memberTier} Member
+              </span>
+            )}
+            <button className="btn-primary" style={{padding:"0.5rem 1rem",fontSize:"0.8rem"}} onClick={()=>setPage("products")}>Shop Now</button>
+          </div>
+        </div>
+
+        {/* Stats */}
+        {loading?(
+          <div className="loading-wrap"><div className="spinner"/></div>
+        ):(
+          <>
+            <div className="dash-stats">
+              {[
+                {icon:"📦",num:stats?.totalOrders||0,    label:"Total Orders",  color:"var(--acid)"},
+                {icon:"💰",num:`$${stats?.totalSpent||0}`,label:"Total Spent",  color:"var(--cyan)"},
+                {icon:"🚀",num:stats?.delivered||0,       label:"Delivered",     color:"var(--violet)"},
+                {icon:"❤️",num:stats?.wishlistCount||0,   label:"Saved Items",   color:"var(--pink)"},
+              ].map((s,i)=>(
+                <div key={s.label} className="stat-card animate-in" style={{animationDelay:`${i*0.1}s`}}>
+                  <div className="icon">{s.icon}</div>
+                  <div className="num" style={{color:s.color}}>{s.num}</div>
+                  <div className="lbl">{s.label}</div>
+                </div>
+              ))}
+            </div>
+
+            <div className="dash-grid">
+              {/* Orders */}
+              <div className="form-section">
+                <h3 style={{fontFamily:"'Syne',sans-serif",fontWeight:700,marginBottom:"1.5rem",display:"flex",justifyContent:"space-between"}}>
+                  Recent Orders
+                  <span style={{color:"var(--muted)",fontSize:"0.82rem",cursor:"pointer"}}>
+                    {orders.length} total
+                  </span>
+                </h3>
+                {orders.length===0?(
+                  <div style={{textAlign:"center",padding:"2rem",color:"var(--muted)"}}>
+                    <div style={{fontSize:"2rem",marginBottom:"0.5rem"}}>📦</div>
+                    <p>No orders yet. Start shopping!</p>
+                    <button className="btn-outline" style={{marginTop:"1rem",padding:"0.5rem 1.2rem",fontSize:"0.82rem"}} onClick={()=>setPage("products")}>Shop Now</button>
+                  </div>
+                ):orders.slice(0,5).map(o=>{
+                  const ss=STATUS_STYLE[o.status]||STATUS_STYLE.pending;
+                  const firstItem=o.items?.[0];
+                  return(
+                    <div key={o.id} className="order-item">
+                      {firstItem?.image&&<img src={firstItem.image} alt={firstItem.name}/>}
+                      <div style={{flex:1}}>
+                        <div style={{fontWeight:600,fontSize:"0.9rem"}}>
+                          {firstItem?.name||"Order"}{o.items?.length>1?` +${o.items.length-1} more`:""}
+                        </div>
+                        <div style={{color:"var(--muted)",fontSize:"0.78rem"}}>{o.payment_id} · {new Date(o.created_at).toLocaleDateString()}</div>
+                      </div>
+                      <div style={{textAlign:"right"}}>
+                        <div style={{fontWeight:700,color:"var(--acid)",fontSize:"0.9rem"}}>${parseFloat(o.total).toFixed(2)}</div>
+                        <span style={{background:ss.bg,color:ss.color,padding:"0.25rem 0.7rem",borderRadius:100,fontSize:"0.7rem",fontWeight:600,textTransform:"capitalize",display:"inline-block",marginTop:"0.3rem"}}>{o.status}</span>
+                        {(o.status==="pending"||o.status==="processing")&&(
+                          <button onClick={()=>handleCancel(o.id)} disabled={cancelling===o.id} style={{display:"block",marginTop:"0.3rem",background:"none",border:"none",color:"var(--pink)",fontSize:"0.72rem",cursor:"pointer"}}>
+                            {cancelling===o.id?"...":"Cancel"}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Wishlist */}
+              <div className="form-section">
+                <h3 style={{fontFamily:"'Syne',sans-serif",fontWeight:700,marginBottom:"1.5rem"}}>Saved Items</h3>
+                {wishlist.length===0?(
+                  <div style={{textAlign:"center",padding:"2rem",color:"var(--muted)"}}>
+                    <div style={{fontSize:"2rem",marginBottom:"0.5rem"}}>❤️</div>
+                    <p style={{fontSize:"0.85rem"}}>No saved items yet.</p>
+                  </div>
+                ):wishlist.slice(0,5).map(p=>(
+                  <div key={p.id} style={{display:"flex",gap:"0.75rem",alignItems:"center",marginBottom:"1rem"}}>
+                    <img src={p.main_image} style={{width:55,height:55,borderRadius:10,objectFit:"cover",cursor:"pointer"}}
+                      onClick={()=>{setDetailProduct(p);setPage("detail");}}/>
+                    <div style={{flex:1}}>
+                      <div style={{fontWeight:600,fontSize:"0.85rem",cursor:"pointer"}} onClick={()=>{setDetailProduct(p);setPage("detail");}}>{p.name}</div>
+                      <div style={{color:"var(--acid)",fontWeight:700,fontSize:"0.9rem"}}>${p.price}</div>
+                    </div>
+                    <div style={{display:"flex",flexDirection:"column",gap:"0.3rem"}}>
+                      <button onClick={()=>addToCart(p)} style={{background:"var(--violet)",border:"none",color:"#fff",padding:"0.35rem 0.7rem",borderRadius:100,cursor:"pointer",fontSize:"0.72rem",fontWeight:600,fontFamily:"'DM Sans',sans-serif"}}>+ Cart</button>
+                      <button onClick={()=>removeFromWishlist(p.id)} style={{background:"none",border:"none",color:"var(--muted)",cursor:"pointer",fontSize:"0.72rem"}}>Remove</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+      <Footer/>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  ROOT APP — state management + API wiring
+// ═══════════════════════════════════════════════════════════════
+function App(){
+  const [page,setPage]               = useState("home");
+  const [user,setUser]               = useState(null);
+  const [cartItems,setCartItems]     = useState([]);
+  const [cartLoading,setCartLoading] = useState(false);
+  const [detailProduct,setDetailProduct] = useState(null);
+  const [toast,setToast]             = useState(null);
+  const [mobileOpen,setMobileOpen]   = useState(false);
+  const [apiOnline,setApiOnline]     = useState(false);
+
+  // ── Check if backend is online ──────────────────────────────
+  useEffect(()=>{
+    fetch("http://localhost:5000/health")
+      .then(r=>r.ok&&setApiOnline(true))
+      .catch(()=>setApiOnline(false));
+  },[]);
+
+  // ── Restore session from localStorage ──────────────────────
+  useEffect(()=>{
+    const token = localStorage.getItem("sole_token");
+    const saved = localStorage.getItem("sole_user");
+    if(token && saved){
+      try{ setUser(JSON.parse(saved)); } catch{}
+      API.me()
+        .then(d=>{ setUser(d.user); localStorage.setItem("sole_user",JSON.stringify(d.user)); })
+        .catch(()=>{ localStorage.removeItem("sole_token"); localStorage.removeItem("sole_user"); setUser(null); });
+    }
+  },[]);
+
+  // ── Load cart whenever user changes ─────────────────────────
+  useEffect(()=>{
+    if(!user){ setCartItems([]); return; }
+    setCartLoading(true);
+    API.getCart()
+      .then(d=>setCartItems(d.items||[]))
+      .catch(()=>setCartItems([]))
+      .finally(()=>setCartLoading(false));
+  },[user]);
+
+  // ── Toast helper ─────────────────────────────────────────────
+  const showToast = useCallback((message, type="success")=>{
+    setToast({message,type});
+  },[]);
+
+  // ── Auth ─────────────────────────────────────────────────────
+  const loginUser = useCallback(async(email,password)=>{
+    const data = await API.login({email,password});
+    localStorage.setItem("sole_token", data.token);
+    localStorage.setItem("sole_user",  JSON.stringify(data.user));
+    setUser(data.user);
+    return data.user;
+  },[]);
+
+  const registerUser = useCallback(async(name,email,password)=>{
+    const data = await API.register({name,email,password});
+    localStorage.setItem("sole_token", data.token);
+    localStorage.setItem("sole_user",  JSON.stringify(data.user));
+    setUser(data.user);
+    return data.user;
+  },[]);
+
+  const logout = useCallback(()=>{
+    localStorage.removeItem("sole_token");
+    localStorage.removeItem("sole_user");
+    setUser(null);
+    setCartItems([]);
+    setPage("home");
+    showToast("Logged out successfully");
+  },[showToast]);
+
+  // ── Cart actions ─────────────────────────────────────────────
+  const addToCart = useCallback(async(product, size=null, colorHex=null)=>{
+    if(!user){ showToast("Please sign in to add to cart","error"); return false; }
+    try{
+      const data = await API.addToCart({productId:product.id, qty:1, size, colorHex});
+      setCartItems(data.items||[]);
+      showToast(product.name+" added to cart! 🛒");
+      return true;
+    } catch(e){
+      showToast(e.message||"Could not add to cart","error");
+      return false;
+    }
+  },[user,showToast]);
+
+  const buyNow = useCallback(async(product)=>{
+    const ok = await addToCart(product);
+    if(ok) setPage("cart");
+  },[addToCart]);
+
+  const updateCartItem = useCallback(async(itemId, qty)=>{
+    try{
+      const data = await API.updateCart(itemId,{qty});
+      setCartItems(data.items||[]);
+    } catch(e){ showToast(e.message,"error"); }
+  },[showToast]);
+
+  const removeCartItem = useCallback(async(itemId)=>{
+    try{
+      const data = await API.removeCart(itemId);
+      setCartItems(data.items||[]);
+      showToast("Removed from cart");
+    } catch(e){ showToast(e.message,"error"); }
+  },[showToast]);
+
+  const clearCartLocal = useCallback(()=>setCartItems([]),[]);
+
+  // ── Cart totals ──────────────────────────────────────────────
+  const subtotal = parseFloat(cartItems.reduce((s,i)=>s+parseFloat(i.unit_price)*i.qty,0).toFixed(2));
+  const shipping  = subtotal>=150 ? 0 : (subtotal>0 ? 12 : 0);
+  const total     = parseFloat((subtotal+shipping).toFixed(2));
+
+  // ── Page renderer ────────────────────────────────────────────
+  const renderPage=()=>{
+    switch(page){
+      case"home":      return <HomePage/>;
+      case"products":  return <ProductsPage/>;
+      case"detail":    return <DetailPage/>;
+      case"cart":      return <CartPage/>;
+      case"checkout":  return <CheckoutPage/>;
+      case"login":     return <LoginPage/>;
+      case"signup":    return <SignupPage/>;
+      case"dashboard": return <DashboardPage/>;
+      default:         return <HomePage/>;
+    }
+  };
+
+  const ctx={
+    page,setPage,
+    user,loginUser,registerUser,logout,
+    cartItems,cartLoading,updateCartItem,removeCartItem,clearCartLocal,
+    subtotal,shipping,total,
+    addToCart,buyNow,
+    detailProduct,setDetailProduct,
+    mobileOpen,setMobileOpen,
+    showToast,apiOnline,
+  };
+
+  return(
+    <AppCtx.Provider value={ctx}>
+      <Navbar/>
+      {renderPage()}
+      {toast&&(
+        <Toast message={toast.message} type={toast.type} onDone={()=>setToast(null)}/>
+      )}
+    </AppCtx.Provider>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
