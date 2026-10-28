@@ -62,10 +62,22 @@ export default function Products() {
                 {c}
               </button>
             ))}
-            <button className={'filter-chip'+(badge==='Sale'?' active':'')} onClick={()=>{setBadge(badge==='Sale'?'');setCat('All');}}>
+            <button
+  className={'filter-chip' + (badge === 'Sale' ? ' active' : '')}
+  onClick={() => {
+    setBadge(badge === 'Sale' ? '' : 'Sale');
+    setCat('All');
+  }}
+>
               🏷 Sale
             </button>
-            <button className={'filter-chip'+(badge==='New'?' active':'')} onClick={()=>{setBadge(badge==='New'?'');setCat('All');}}>
+            <button
+  className={'filter-chip' + (badge === 'New' ? ' active' : '')}
+  onClick={() => {
+    setBadge(badge === 'New' ? '' : 'New');
+    setCat('All');
+  }}
+>
               ✨ New
             </button>
           </div>
