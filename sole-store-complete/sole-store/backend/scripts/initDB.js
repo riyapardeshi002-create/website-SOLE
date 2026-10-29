@@ -5,36 +5,29 @@ const fs   = require('fs');
 const path = require('path');
 
 async function init() {
-  const dbName = process.env.DB_NAME || 'sole_store';
+  const hasDatabaseUrl = Boolean(process.env.DATABASE_URL);
+  const useSSL = process.env.DB_SSL === 'true' || hasDatabaseUrl || process.env.NODE_ENV === 'production';
 
-  // Connect to default postgres DB to create our DB
-  const adminPool = new Pool({
-    host: process.env.DB_HOST || 'localhost', port: process.env.DB_PORT || 5432,
-    database: 'postgres',
-    user: process.env.DB_USER || 'postgres', password: process.env.DB_PASSWORD || 'ASDF189251',
-  });
-  try {
-    const { rowCount } = await adminPool.query('SELECT 1 FROM pg_database WHERE datname=$1', [dbName]);
-    if (!rowCount) {
-      await adminPool.query(`CREATE DATABASE ${dbName}`);
-      console.log(`✅ Created database: ${dbName}`);
-    } else {
-      console.log(`ℹ️  Database already exists: ${dbName}`);
-    }
-  } finally {
-    await adminPool.end();
-  }
+  const poolConfig = hasDatabaseUrl
+    ? {
+        connectionString: process.env.DATABASE_URL,
+        ssl: process.env.DB_SSL === 'false' ? false : { rejectUnauthorized: false },
+      }
+    : {
+        host: process.env.DB_HOST || 'localhost',
+        port: process.env.DB_PORT || 5432,
+        database: process.env.DB_NAME || 'sole_store',
+        user: process.env.DB_USER || 'postgres',
+        password: process.env.DB_PASSWORD || 'ASDF189251',
+        ssl: useSSL ? { rejectUnauthorized: false } : false,
+      };
 
-  // Apply schema
-  const appPool = new Pool({
-    host: process.env.DB_HOST || 'localhost', port: process.env.DB_PORT || 5432,
-    database: dbName,
-    user: process.env.DB_USER || 'postgres', password: process.env.DB_PASSWORD || 'ASDF189251',
-  });
+  const appPool = new Pool(poolConfig);
   try {
+    console.log('Applying schema to database...');
     const sql = fs.readFileSync(path.join(__dirname, '../sql/schema.sql'), 'utf8');
     await appPool.query(sql);
-    console.log('✅ Schema applied');
+    console.log('✅ Schema applied successfully');
   } finally {
     await appPool.end();
   }

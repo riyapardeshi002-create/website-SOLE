@@ -1,15 +1,30 @@
 // backend/server.js
 require('dotenv').config();
+const fs      = require('fs');
+const path    = require('path');
 const express = require('express');
 const cors    = require('cors');
 const { errorHandler, notFound } = require('./middleware/errorHandler');
+const { query } = require('./config/db');
 
 const app  = express();
 const PORT = process.env.PORT || 5000;
 
 // ── Middleware ────────────────────────────────────────────────
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:5173',
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+
 app.use(cors({
-  origin:      process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.length === 0 || allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production') {
+      return callback(null, true);
+    }
+    return callback(null, true);
+  },
   credentials: true,
   methods:     ['GET','POST','PUT','DELETE','OPTIONS'],
   allowedHeaders: ['Content-Type','Authorization'],
@@ -36,8 +51,20 @@ app.use('/api/cart',     require('./routes/cart'));
 app.use('/api/orders',   require('./routes/orders'));
 app.use('/api/wishlist', require('./routes/wishlist'));
 
+// ── Database Setup / Migration Endpoint ───────────────────────
+app.post('/api/admin/init-db', async (_req, res) => {
+  try {
+    const schemaSql = fs.readFileSync(path.join(__dirname, 'sql/schema.sql'), 'utf8');
+    await query(schemaSql);
+    const seedSql = fs.readFileSync(path.join(__dirname, 'sql/seed.sql'), 'utf8');
+    await query(seedSql);
+    res.json({ success: true, message: 'Database initialized and seeded successfully' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 // ── Categories shortcut ───────────────────────────────────────
-const { query } = require('./config/db');
 app.get('/api/categories', async (_req, res, next) => {
   try {
     const { rows } = await query('SELECT * FROM categories ORDER BY name');
@@ -73,9 +100,29 @@ app.get('/api/dashboard/stats', protect, async (req, res, next) => {
 app.use(notFound);
 app.use(errorHandler);
 
-app.listen(PORT, () => {
+// ── Auto-initialize DB if tables missing ──────────────────────
+async function initDatabaseIfNeeded() {
+  try {
+    const { rows } = await query("SELECT 1 FROM information_schema.tables WHERE table_schema='public' AND table_name='products'");
+    if (!rows.length) {
+      console.log('🔄 Initializing database: applying schema and seed data...');
+      const schemaSql = fs.readFileSync(path.join(__dirname, 'sql/schema.sql'), 'utf8');
+      await query(schemaSql);
+      const seedSql = fs.readFileSync(path.join(__dirname, 'sql/seed.sql'), 'utf8');
+      await query(seedSql);
+      console.log('✅ Database initialized and seeded successfully!');
+    } else {
+      console.log('✅ Database tables already initialized.');
+    }
+  } catch (err) {
+    console.error('⚠️ Database auto-migration warning:', err.message);
+  }
+}
+
+app.listen(PORT, async () => {
   console.log(`\n🚀  SOLE API  →  http://localhost:${PORT}`);
   console.log(`🗃️   Database  →  ${process.env.DB_NAME || 'sole_store'} @ ${process.env.DB_HOST || 'localhost'}\n`);
+  await initDatabaseIfNeeded();
 });
 
 module.exports = app;
