@@ -39,7 +39,25 @@ if (process.env.NODE_ENV !== 'production') {
   });
 }
 
-// ── Health ────────────────────────────────────────────────────
+// ── Health & Welcome ──────────────────────────────────────────
+app.get('/', (_req, res) => {
+  res.json({
+    success: true,
+    name: 'SOLE Store API',
+    status: 'online',
+    version: '1.0.0',
+    endpoints: {
+      health: '/health',
+      products: '/api/products',
+      categories: '/api/categories',
+      auth: '/api/auth',
+      cart: '/api/cart',
+      orders: '/api/orders',
+      wishlist: '/api/wishlist'
+    }
+  });
+});
+
 app.get('/health', (_req, res) =>
   res.json({ status:'ok', time: new Date().toISOString() })
 );
